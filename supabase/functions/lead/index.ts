@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const FROM = "MissionPop <noreply@mission-pop.com>";
-const TO = "Contact@mission-pop.com";
+const FROM = "MissionPop <noreply@mission-go.fr>";
+const TO = "Contact@mission-go.fr";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
         ${email ? `<p><b>Email :</b> ${esc(email)}</p>` : ""}
         ${besoin ? `<p><b>Besoin :</b><br>${esc(besoin).replace(/\n/g, "<br>")}</p>` : ""}
         <hr style="border:none;border-top:1px solid #EAE2D6;margin:22px 0">
-        <p style="font-size:12px;color:#6B7F6B">Envoye depuis mission-pop.com &middot; consentement RGPD accepte</p>
+        <p style="font-size:12px;color:#6B7F6B">Envoye depuis mission-go.fr &middot; consentement RGPD accepte</p>
       </div>`;
 
     try {
