@@ -1,0 +1,17 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/cgu"
+  to = "/cgu.html"
+  status = 200
+
+[[redirects]]
+  from = "/cgv"
+  to = "/cgv.html"
+  status = 200
+
+[[redirects]]
+  from = "/confidentialite"
+  to = "/confidentialite.html"
+  status = 200
