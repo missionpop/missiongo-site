@@ -505,21 +505,18 @@
   .credit-box p{font-size:14px;line-height:1.6;color:#5c5346;margin:0;}
   .credit-box a{color:var(--coral700);}
   .credit-x{position:absolute;top:10px;right:14px;background:none;border:none;font-size:24px;line-height:1;color:#9a8f80;cursor:pointer;}
-  /* modal Mentions légales (BROUILLON) : même veine que Crédits, en plus grand + scrollable */
+  /* modal Mentions legales : même veine que Crédits, en plus grand + scrollable */
   .legal-modal{position:fixed;inset:0;z-index:10000;display:none;align-items:flex-start;justify-content:center;background:rgba(14,42,31,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);padding:5vh 20px;}
   .legal-modal.open{display:flex;}
   .legal-box{position:relative;background:var(--cream);color:var(--deepForest);max-width:760px;width:100%;border-radius:16px;box-shadow:0 40px 90px -30px rgba(0,0,0,.55);max-height:90vh;overflow-y:auto;}
   .legal-x{position:absolute;top:12px;right:16px;background:none;border:none;font-size:28px;line-height:1;color:#9a8f80;cursor:pointer;z-index:2;}
-  .legal-draft{background:var(--coral);color:#fff;font-family:'Inter',system-ui,sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;text-align:center;padding:9px 40px;border-radius:16px 16px 0 0;}
   .legal-inner{padding:22px 34px 6px;}
   .legal-inner h3{font-family:var(--serif);font-weight:600;font-size:26px;margin:6px 0 4px;color:var(--deepForest);}
-  .legal-inner .legal-sub{font-size:13px;color:var(--sage);margin:0 0 18px;line-height:1.5;}
   .legal-inner h4{font-family:var(--serif);font-weight:600;font-size:17px;margin:22px 0 7px;color:var(--deepForest);}
   .legal-inner p{font-size:14px;line-height:1.65;color:#5c5346;margin:0 0 10px;}
   .legal-inner a{color:var(--coral700);}
-  .legal-inner .ph{background:rgba(255,94,74,.12);color:var(--coral700);border-radius:5px;padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:12px;white-space:nowrap;}
   .legal-inner hr{border:none;border-top:1px solid #ECE5D9;margin:20px 0;}
-  @media(max-width:560px){.legal-inner{padding:20px 20px 6px;}.legal-draft{padding:9px 30px;}}
+  @media(max-width:560px){.legal-inner{padding:20px 20px 6px;}}
   .rp-err{color:var(--coral700);font-size:13px;line-height:1.45;margin-top:10px;}
 
 /* ============ FAQ scène "qui répond" (préfixe f7, isolé) ============ */
@@ -1478,7 +1475,7 @@
       <div class="col"><h5>Entreprises</h5><a href="https://business.mission-go.fr/signup">Inscrire mon entreprise</a><a href="https://business.mission-go.fr/login">Connexion</a><a href="#how">Comment ça marche</a><a href="#secteurs">Secteurs</a></div>
       <div class="col"><h5>Indépendants</h5><a href="#independants">Découvrir l'app</a><a href="mailto:contact@mission-go.fr?subject=Devenir%20ind%C3%A9pendant%20MissionGo">Devenir indépendant</a></div>
       <div class="col"><h5>MissionGo</h5><a href="#faq">FAQ</a><a href="#faq">Centre d'aide</a><a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a></div>
-      <div class="col"><h5>Légal</h5><a href="#" onclick="event.preventDefault();mpLegal(true)">Mentions légales</a><a href="#" onclick="event.preventDefault();mpPrivacy(true)">Confidentialité (RGPD)</a><a href="#" onclick="event.preventDefault();mpToast('Disponible au lancement du site')">CGU</a></div>
+      <div class="col"><h5>Légal</h5><a href="#" onclick="event.preventDefault();mpLegal(true)">Mentions légales</a><a href="/confidentialite">Confidentialité</a><a href="/cgu">CGU</a><a href="/cgv">CGV</a></div>
     </div>
   </div>
   <div class="bottom"><span>© 2026 MissionGo · Paris &amp; partout en France</span><span><a href="#" class="credit-link" onclick="event.preventDefault();mpCredits(true)">Crédits</a> · Conçu à Paris</span></div>
@@ -1494,17 +1491,15 @@
 </div>
 <script>function mpCredits(o){var m=document.getElementById("creditModal");if(m)m.classList.toggle("open",o);}document.addEventListener("keydown",function(e){if(e.key==="Escape")mpCredits(false);});</script>
 
-<!-- Mentions légales : BROUILLON local. NE PAS PUBLIER tant que la société n’est pas immatriculée + validation avocat. Remplacer les [ placeholders ] avant mise en ligne. -->
+<!-- Mentions legales -->
 <div class="legal-modal" id="legalModal" onclick="if(event.target===this)mpLegal(false)">
   <div class="legal-box">
-    <div class="legal-draft">BROUILLON · non publié · en attente d’immatriculation et de validation juridique</div>
     <button class="legal-x" onclick="mpLegal(false)" aria-label="Fermer">×</button>
     <div class="legal-inner">
       <h3>Mentions légales</h3>
-      <p class="legal-sub">Version de travail. Certaines informations seront complétées une fois la société immatriculée.</p>
 
       <h4>1. Éditeur du site</h4>
-      <p>Le site mission-go.fr est édité par MissionGo, SARL au capital de 300 €. Siège social : 50 bis rue Alexandre Turpault, 78390 Bois-d'Arcy. Immatriculée au Registre du commerce et des sociétés de Versailles sous le numéro 109 076 364. SIRET du siège : 109 076 364 00016. Numéro de TVA intracommunautaire : FR 89 109 076 364. Adresse électronique : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
+      <p>Le site mission-go.fr est édité par MissionGo, SARL au capital de 300 €. Siège social : 50 bis rue Alexandre Turpault, 78390 Bois-d'Arcy. Immatriculée au Registre du commerce et des sociétés de Versailles sous le numéro 109 076 364. SIREN : 109 076 364. SIRET du siège : 109 076 364 00016. Numéro de TVA intracommunautaire : FR 89 109 076 364. Adresse électronique : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
 
       <h4>2. Directeur de la publication</h4>
       <p>Les directeurs de la publication sont Adam Jalloul et Adel Jalloul, cogérants de la société.</p>
@@ -1526,63 +1521,14 @@
       <p>L’éditeur s’efforce d’assurer l’exactitude des informations diffusées, sans garantir qu’elles soient exemptes d’erreurs ou d’omissions. Il ne saurait être tenu responsable des dommages résultant de l’accès au site ou de son utilisation, ni du contenu des sites tiers vers lesquels des liens pourraient renvoyer.</p>
 
       <hr>
-      <p style="font-size:12.5px;color:var(--sage);">Dernière mise à jour : <span class="ph">[ date de publication ]</span>.</p>
+      <p style="font-size:12.5px;color:var(--sage);">Dernière mise à jour : 27 août 2026.</p>
     </div>
   </div>
 </div>
 <script>function mpLegal(o){var m=document.getElementById("legalModal");if(m)m.classList.toggle("open",o);}document.addEventListener("keydown",function(e){if(e.key==="Escape")mpLegal(false);});</script>
 
-<!-- Politique de confidentialité (RGPD) : BROUILLON local. NE PAS PUBLIER tant que validation avocat + infos société. Réutilise le style .legal-* -->
-<div class="legal-modal" id="privacyModal" onclick="if(event.target===this)mpPrivacy(false)">
-  <div class="legal-box">
-    <div class="legal-draft">BROUILLON · non publié · à faire valider par un conseil juridique</div>
-    <button class="legal-x" onclick="mpPrivacy(false)" aria-label="Fermer">×</button>
-    <div class="legal-inner">
-      <h3>Politique de confidentialité</h3>
-      <p class="legal-sub">Version de travail. Décrit le traitement des données personnelles collectées sur le site mission-go.fr.</p>
+<!-- Politique de confidentialite : renvoi vers la page dediee -->
 
-      <h4>1. Responsable du traitement</h4>
-      <p>Le responsable du traitement des données collectées sur ce site est MissionGo, dont les coordonnées complètes figurent dans les Mentions légales. Contact : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
-
-      <h4>2. Données collectées</h4>
-      <p>Le site collecte des données personnelles uniquement via le formulaire « Être rappelé » : nom, nom de l’entreprise, adresse électronique, numéro de téléphone, et le message éventuellement renseigné. Des informations techniques minimales (type de navigateur, origine de la demande) sont enregistrées avec la demande, à des fins de sécurité. Aucune donnée n’est collectée à votre insu en dehors de ce formulaire.</p>
-
-      <h4>3. Finalité</h4>
-      <p>Ces données servent un seul objectif : vous recontacter à votre demande, afin de répondre à votre prise de contact. Elles ne sont ni revendues, ni utilisées à d’autres fins.</p>
-
-      <h4>4. Base légale</h4>
-      <p>Le traitement repose sur votre consentement, recueilli via la case à cocher du formulaire, que vous êtes libre de ne pas cocher. Ce consentement peut être retiré à tout moment.</p>
-
-      <h4>5. Destinataires et sous-traitants</h4>
-      <p>Vos données sont accessibles uniquement à l’équipe de MissionGo. Elles sont traitées par des prestataires techniques agissant comme sous-traitants : Supabase (hébergement de la base de données) et Resend (acheminement des courriels de notification). Ces prestataires n’utilisent pas vos données pour leur propre compte.</p>
-
-      <h4>6. Transferts hors Union européenne</h4>
-      <p>Certaines données peuvent être hébergées ou traitées par des prestataires situés en dehors de l’Union européenne (Resend et Vercel sont établis aux États-Unis ; la base de données Supabase est hébergée à Francfort, en Allemagne). Lorsque de tels transferts ont lieu, ils sont encadrés par des garanties appropriées, notamment les clauses contractuelles types de la Commission européenne.</p>
-
-      <h4>7. Durée de conservation</h4>
-      <p>Vos données sont conservées le temps nécessaire au traitement de votre demande, puis pendant une durée maximale de trois ans à compter de notre dernier contact, conformément aux recommandations de la CNIL en matière de prospection. Passé ce délai, elles sont supprimées.</p>
-
-      <h4>8. Vos droits</h4>
-      <p>Conformément au Règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés, vous disposez d’un droit d’accès, de rectification, d’effacement, d’opposition, de limitation et de portabilité de vos données. Pour exercer ces droits, écrivez à <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
-
-      <h4>9. Cookies</h4>
-      <p>Ce site n’utilise pas de cookies publicitaires ni de traceurs à des fins de mesure d’audience. Seuls des éléments strictement nécessaires à son fonctionnement peuvent être utilisés. Si un outil de mesure d’audience était ajouté à l’avenir, cette politique serait mise à jour et votre consentement recueilli le cas échéant.</p>
-
-      <h4>10. Sécurité</h4>
-      <p>Vos données sont stockées sur une infrastructure sécurisée à accès restreint. Des mesures techniques et organisationnelles raisonnables sont mises en œuvre pour les protéger contre tout accès non autorisé.</p>
-
-      <h4>11. Réclamation</h4>
-      <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la Commission nationale de l’informatique et des libertés (CNIL), l’autorité française de protection des données : <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>.</p>
-
-      <hr>
-      <p style="font-size:12.5px;color:var(--sage);">Dernière mise à jour : <span class="ph">[ date de publication ]</span>.</p>
-      <div style="background:rgba(255,94,74,.09);border:1px solid rgba(255,94,74,.25);border-radius:10px;padding:12px 14px;margin-top:6px;">
-        <p style="font-size:12.5px;color:var(--coral700);margin:0;"><strong>À valider avec l’avocat :</strong> la durée de conservation, la région d’hébergement Supabase, le statut des transferts hors UE (Resend, Vercel, polices et bibliothèques chargées depuis des CDN externes comme Google Fonts), et l’éventuelle désignation d’un délégué à la protection des données.</p>
-      </div>
-    </div>
-  </div>
-</div>
-<script>function mpPrivacy(o){var m=document.getElementById("privacyModal");if(m)m.classList.toggle("open",o);}document.addEventListener("keydown",function(e){if(e.key==="Escape")mpPrivacy(false);});</script>
 
 <div class="grain-global"></div>
 <div class="scrollhint" id="scrollhint"><span class="mouse"><span class="wheel"></span></span><div class="lbl">Scroll</div></div>
