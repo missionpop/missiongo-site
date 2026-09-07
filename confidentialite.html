@@ -147,11 +147,12 @@
 
 <h2>3. Géolocalisation</h2>
 <p>Deux traitements distincts font intervenir une localisation.</p>
-<p><strong>Les coordonnées du domicile</strong> sont calculées à partir de l'adresse renseignée lors de l'inscription. Elles servent uniquement à faire remonter en priorité les missions les plus proches. Elles ne sont pas relevées par l'appareil et ne sont jamais communiquées aux entreprises clientes.</p>
-<p><strong>La position au moment du pointage</strong> est relevée à deux moments seulement : à l'arrivée sur le lieu de mission et au départ.</p>
-<p>Aucun suivi continu n'est effectué. La position n'est pas enregistrée entre ces deux moments, ni en dehors des missions, ni lorsque l'application fonctionne en arrière-plan.</p>
+<p><strong>Les coordonnées du domicile</strong> servent uniquement à faire remonter en priorité les missions les plus proches. Elles ne sont jamais communiquées aux entreprises clientes. Au moment de l'inscription, l'adresse peut être saisie à la main, ou renseignée automatiquement à partir de la position de l'appareil si le Worker choisit ce raccourci ; dans ce second cas seulement, les coordonnées relevées sont conservées avec le profil. Ce raccourci est facultatif et la localisation n'est demandée que s'il est utilisé.</p>
+<p><strong>La position au moment du pointage</strong> est enregistrée à deux moments seulement : à l'arrivée sur le lieu de mission et au départ. Un unique relevé est effectué à chacun de ces deux instants, et lui seul est transmis à MissionGo.</p>
+<p>Pendant que l'écran de pointage est ouvert, l'application suit la position sur l'appareil afin d'indiquer au Worker s'il se trouve dans le périmètre de la mission. Cette lecture reste sur le téléphone : elle n'est ni enregistrée, ni transmise. Elle cesse dès que l'écran est quitté.</p>
+<p>En dehors de ces deux pointages, aucune position n'est enregistrée : ni pendant la mission, ni entre les missions, ni lorsque l'application fonctionne en arrière-plan. Le suivi en arrière-plan est désactivé dans l'application elle-même ; le système n'autorise la localisation que lorsque l'application est ouverte et au premier plan.</p>
 <p>Ces données servent uniquement à attester de la présence sur le lieu convenu, à établir la facturation et à traiter les éventuelles contestations. Elles ne sont ni utilisées à des fins de suivi de l'activité, ni communiquées à l'entreprise cliente autrement que sous la forme d'une confirmation de présence.</p>
-<p>L'autorisation de localisation peut être retirée à tout moment dans les réglages de l'appareil. Un moyen alternatif de déclaration du pointage est alors proposé.</p>
+<p>La localisation au pointage est nécessaire à l'exécution de la prestation : elle constitue la preuve de présence — lieu et heure — remise au Client. Elle est donc obligatoire et il n'existe pas de moyen de pointage alternatif. L'autorisation peut être retirée à tout moment dans les réglages de l'appareil, mais le pointage devient alors impossible, et la mission ne peut pas être effectuée.</p>
 
 <h2>4. Destinataires et sous-traitants</h2>
 <p>Les données ne sont ni vendues, ni louées, ni transmises à des tiers à des fins commerciales.</p>
