@@ -800,6 +800,22 @@
 @media(max-width:880px){.f7scene{display:none;}}
 @media(prefers-reduced-motion:reduce){.f7vg *{animation-duration:.01s !important;animation-delay:0s !important;}.f7v0 .f7z,.f7v0 .f7orb,.f7amb i{animation:none;}.f7shk.f7go{animation:none;}}
 
+  /* ===== Bloc entrée indépendants (juste après "Comment ça marche") ===== */
+  .indep-intro{padding:clamp(84px,12vh,120px) 7vw;background:var(--cream);border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;position:relative;z-index:4;}
+  .indep-intro .ii-wrap{max-width:760px;margin:0 auto;}
+  .indep-intro .eyebrow{justify-content:center;margin-bottom:26px;}
+  .indep-intro h2{font-family:var(--serif);font-weight:500;font-size:clamp(34px,4.6vw,56px);line-height:1.04;letter-spacing:-.02em;color:var(--deepForest);margin:0;}
+  .indep-intro h2 .accent{color:var(--coral);}
+  .indep-intro .ii-lead{font-size:clamp(16px,1.8vw,19px);line-height:1.6;color:#42594a;margin:22px auto 30px;max-width:600px;}
+  .indep-intro .feats{justify-content:center;margin:0 auto 32px;}
+  .indep-intro .ii-ctas{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;}
+  .indep-intro .ii-soon{margin-top:24px;font-size:14px;color:var(--sage);}
+  .indep-intro .ii-soon b{color:var(--deepForest);font-weight:600;}
+  @media (max-width:520px){ .indep-intro{padding:64px 7vw;} .indep-intro h2{font-size:30px;} .indep-intro .ii-ctas .btn{width:100%;justify-content:center;} }
+  /* Contact direct sous le formulaire de rappel (#cta) */
+  .rp-contact{margin-top:20px;font-size:14.5px;line-height:1.55;color:var(--sage);}
+  .rp-contact a{color:var(--coral700);font-weight:600;text-decoration:none;white-space:nowrap;}
+  .rp-contact a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -918,6 +934,25 @@
   </div>
 </section>
 
+
+<!-- ===== ENTRÉE INDÉPENDANTS (juste après "Comment ça marche") ===== -->
+<section class="indep-intro" id="pour-independants">
+  <div class="ii-wrap reveal-up">
+    <span class="eyebrow">Vous êtes indépendant ?</span>
+    <h2>Des missions près de chez vous,<br>que vous <span class="accent">choisissez</span>.</h2>
+    <p class="ii-lead">MissionGo n'est pas réservé aux entreprises. Rejoignez nos indépendants vérifiés et trouvez des missions ponctuelles dans votre secteur, quand vous le décidez.</p>
+    <div class="feats">
+      <span class="feat">📍 Missions ponctuelles près de chez vous</span>
+      <span class="feat">👆 Vous choisissez librement vos missions</span>
+      <span class="feat">⚡ Paiement rapide &amp; sécurisé</span>
+    </div>
+    <div class="ii-ctas">
+      <a class="btn btn-coral" href="mailto:contact@mission-go.fr?subject=Devenir%20ind%C3%A9pendant%20MissionGo">Devenir indépendant</a>
+      <a class="btn btn-ghost" href="#independants">Voir l'espace indépendant</a>
+    </div>
+    <p class="ii-soon"><b>L'application arrive bientôt.</b> Écrivez-nous pour être prévenu·e du lancement.</p>
+  </div>
+</section>
 
 <!-- ZONE DE TRANSITION DESIGNÉE (how -> secteurs) -->
 <div class="trans">
@@ -1402,6 +1437,8 @@
         <span><span class="rp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Sans engagement</span>
         <span><span class="rp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Réponse rapide, par téléphone</span>
       </div>
+      <!-- CONTACT DIRECT : téléphone (placeholder) + email -->
+      <p class="rp-contact">Une question ? Appelez-nous au <!-- ☎ NUMERO A REMPLACER (placeholder, Adam fournira le vrai numero) --><a href="tel:+33000000000">00 00 00 00 00</a> ou écrivez à <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
     </div>
 
     <div class="rp-formcard reveal-up">
@@ -1474,7 +1511,7 @@
     <div class="cols">
       <div class="col"><h5>Entreprises</h5><a href="https://business.mission-go.fr/signup">Inscrire mon entreprise</a><a href="https://business.mission-go.fr/login">Connexion</a><a href="#how">Comment ça marche</a><a href="#secteurs">Secteurs</a></div>
       <div class="col"><h5>Indépendants</h5><a href="#independants">Découvrir l'app</a><a href="mailto:contact@mission-go.fr?subject=Devenir%20ind%C3%A9pendant%20MissionGo">Devenir indépendant</a></div>
-      <div class="col"><h5>MissionGo</h5><a href="#faq">FAQ</a><a href="#faq">Centre d'aide</a><a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a></div>
+      <div class="col"><h5>MissionGo</h5><a href="#faq">FAQ</a><a href="#faq">Centre d'aide</a><a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a><!-- ☎ NUMERO A REMPLACER (placeholder, Adam fournira le vrai numero) --><a href="tel:+33000000000">00 00 00 00 00</a></div>
       <div class="col"><h5>Légal</h5><a href="#" onclick="event.preventDefault();mpLegal(true)">Mentions légales</a><a href="/confidentialite">Confidentialité</a><a href="/cgu">CGU</a><a href="/cgv">CGV</a></div>
     </div>
   </div>
@@ -1499,7 +1536,7 @@
       <h3>Mentions légales</h3>
 
       <h4>1. Éditeur du site</h4>
-      <p>Le site mission-go.fr est édité par MissionGo, SARL au capital de 300 €. Siège social : 50 bis rue Alexandre Turpault, 78390 Bois-d'Arcy. Immatriculée au Registre du commerce et des sociétés de Versailles sous le numéro 109 076 364. SIREN : 109 076 364. SIRET du siège : 109 076 364 00016. Numéro de TVA intracommunautaire : FR 89 109 076 364. Adresse électronique : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
+      <p>Le site mission-go.fr est édité par MissionGo, SARL au capital de 300 €. Siège social : 50 bis rue Alexandre Turpault, 78390 Bois-d'Arcy. Immatriculée au Registre du commerce et des sociétés de Versailles sous le numéro 109 076 364. SIREN : 109 076 364. SIRET du siège : 109 076 364 00016. Numéro de TVA intracommunautaire : FR 89 109 076 364. Adresse électronique : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>. Téléphone : <!-- ☎ NUMERO A REMPLACER (placeholder, Adam fournira le vrai numero) --><a href="tel:+33000000000">00 00 00 00 00</a>.</p>
 
       <h4>2. Directeur de la publication</h4>
       <p>Les directeurs de la publication sont Adam Jalloul et Adel Jalloul, cogérants de la société.</p>
@@ -1508,7 +1545,7 @@
       <p>Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis (<a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a>). Le back end applicatif (base de données, authentification) est fourni par Supabase Inc. Les traitements de données personnelles associés sont détaillés dans la Politique de confidentialité.</p>
 
       <h4>4. Contact</h4>
-      <p>Pour toute question relative au site ou à son contenu : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a>.</p>
+      <p>Pour toute question relative au site ou à son contenu : <a href="mailto:contact@mission-go.fr">contact@mission-go.fr</a> ou par téléphone au <!-- ☎ NUMERO A REMPLACER (placeholder, Adam fournira le vrai numero) --><a href="tel:+33000000000">00 00 00 00 00</a>.</p>
 
       <h4>5. Propriété intellectuelle</h4>
       <p>L’ensemble des éléments du site (textes, identité visuelle, logos, mise en page, code) est protégé par le droit de la propriété intellectuelle et demeure la propriété de MissionGo, sauf mention contraire. Toute reproduction ou représentation, totale ou partielle, sans autorisation écrite préalable, est interdite.</p>
@@ -5502,7 +5539,7 @@ const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)setAc
   addEventListener('resize',resize); resize();
 
   const tE=new THREE.Euler(), tQ=new THREE.Quaternion(), pV=new THREE.Vector3(); let mobGY=0.30;
-  const occTrust=document.querySelector('.trust'), occFooter=document.querySelector('footer'), occBesoin=document.querySelector('#besoin'), occSecteurs=document.querySelector('#secteurs'), occSuivi=document.querySelector('#suivi'), occTerrain=document.querySelector('#terrain'), occPivot=document.querySelector('#pivotband'), occAbout=document.querySelector('#about'), occEquipe=document.querySelector('#equipe'), occCta=document.querySelector('#cta'), occFaq=document.querySelector('#faq'); let phoneOp=1;
+  const occTrust=document.querySelector('.trust'), occFooter=document.querySelector('footer'), occBesoin=document.querySelector('#besoin'), occSecteurs=document.querySelector('#secteurs'), occSuivi=document.querySelector('#suivi'), occTerrain=document.querySelector('#terrain'), occPivot=document.querySelector('#pivotband'), occIndep=document.querySelector('#pour-independants'), occAbout=document.querySelector('#about'), occEquipe=document.querySelector('#equipe'), occCta=document.querySelector('#cta'), occFaq=document.querySelector('#faq'); let phoneOp=1;
   function loop(t){ t*=0.001; const k=reduce?1:0.08;
     cur.px+=(tgt.px-cur.px)*k; cur.ry+=(tgt.ry-cur.ry)*k; cur.rz+=(tgt.rz-cur.rz)*k; cur.sc+=(tgt.sc-cur.sc)*k;
     if(phone&&baseQuat){
@@ -5530,7 +5567,7 @@ const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)setAc
     const bf=(el)=>{ if(!el)return 0; const r=el.getBoundingClientRect(); const ov=Math.min(r.bottom,pB)-Math.max(r.top,pT); return ov<=0?0:Math.min(1,ov/edge); };
     let want;
     if(m2){ const g=mobGY; want=Math.max(0,Math.min(1,(g-0.10)/0.16, (0.98-g)/0.18)); }
-    else { want=1-Math.max(bf(occTrust),bf(occFooter),bf(occBesoin),bf(occSecteurs),bf(occSuivi),bf(occTerrain),bf(occAbout),bf(occEquipe),bf(occCta),bf(occFaq),bf(occPivot)); }
+    else { want=1-Math.max(bf(occTrust),bf(occFooter),bf(occBesoin),bf(occSecteurs),bf(occSuivi),bf(occTerrain),bf(occAbout),bf(occEquipe),bf(occCta),bf(occFaq),bf(occPivot),bf(occIndep)); }
     phoneOp+=(want-phoneOp)*0.2; stage.style.opacity=phoneOp.toFixed(3); haloEl.style.opacity=phoneOp.toFixed(3);
     renderer.render(scene,camera); requestAnimationFrame(loop);
   }
