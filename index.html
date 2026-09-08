@@ -824,7 +824,7 @@
   /* #secteurs : en 2 colonnes à 390px les titres longs ("Événementiel")
      débordent de la carte. Une seule colonne sous 480px : cartes pleine
      largeur, titres entiers, illustrations plus lisibles. */
-  @media (max-width:480px){ .sec-grid{ grid-template-columns:1fr; } }
+  /* (#secteurs reste en 2 colonnes sur mobile — voir refonte v2 plus bas) */
 
   /* #suivi / #equipe : les grilles passent en 1 colonne à ≤900px, mais le
      mock "dashboard" (tags en white-space:nowrap + boutons) impose une
@@ -852,6 +852,58 @@
      contenu sur mobile et le geste de défilement y est évident. Masqué
      sous 768px (conservé sur ordinateur). */
   @media (max-width:768px){ .scrollhint{ display:none; } }
+  /* ============================================================
+     REFONTE MOBILE v2 — rythme vertical
+     Retour d'Adam : page trop longue / cartes #secteurs trop grandes.
+     On revient a 2 colonnes pour #secteurs et on resserre l'espacement
+     pour que la proportion ressemble au desktop. Aucun texte modifie ;
+     desktop (>900px) inchange (tout est sous @media max-width).
+     ============================================================ */
+
+  /* #secteurs : 2 colonnes conservees sur mobile (l'aspect-ratio 3/4
+     rendait les cartes enormes en 1 colonne). Le titre long
+     "Evenementiel" est traite autrement : taille reduite + coupure de
+     mot autorisee + padding de carte resserre. */
+  @media (max-width:560px){
+    .sec-cbody{ left:15px; right:15px; bottom:16px; }
+    .sec-cbody h3{ font-size:18px; overflow-wrap:break-word; word-break:break-word; -webkit-hyphens:auto; hyphens:auto; line-height:1.1; }
+    .sec-cbody .roles{ font-size:12px; }
+  }
+
+  /* Rythme vertical : sections rapprochees, grands ecarts internes
+     reduits, bas des scenes 3D resserre. */
+  @media (max-width:900px){
+    .need{ padding:58px 7vw; }
+    .need .pont{ margin-top:26px; }
+    .secteurs{ padding:52px 6vw 56px; }
+    .sec-head{ margin:0 auto 30px; }
+    .sec-grid{ gap:14px; }
+    #suivi{ padding:56px 6vw; }
+    #equipe{ padding:56px 6vw; }
+    #cta{ padding:56px 6vw; }
+    #about{ padding:56px 6vw; }
+    #faq{ padding:56px 6vw; }
+    .indep-intro{ padding:52px 7vw; }
+
+    /* scenes 3D : on reduit le bas et on rapproche legerement le
+       telephone du texte (reserve haute), sans le chevaucher. */
+    #hero{ padding-top:54vh; }
+    .scene{ padding-top:56vh; padding-bottom:48px; }
+    .scene.bg-soft{ padding-top:52vh; padding-bottom:52px; }
+
+    /* #why : liste resserree */
+    .whylist{ gap:14px; margin-top:18px; }
+    .whyitem p{ font-size:15.5px; margin-top:4px; }
+    .whyitem .ic{ width:42px; height:42px; }
+    .whyitem .ic svg{ width:22px; height:22px; }
+
+    /* #about : les tres grands margins internes (72px/76px) sont
+       disproportionnes sur mobile. */
+    #about .ab-lead{ margin-top:18px; }
+    #about .ab-creed{ margin-top:38px; gap:26px; }
+    #about .ab-close{ margin-top:40px; }
+    #about .ab-mark{ margin-top:26px; }
+  }
 </style>
 </head>
 <body>
