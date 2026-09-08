@@ -955,20 +955,28 @@
     .how-m-frise{ position:relative; padding-left:34px; }
     .how-m-rail{ position:absolute; left:6px; top:7px; bottom:9px; width:2px; }
     .how-m-track{ position:absolute; inset:0; background:var(--border); border-radius:2px; }
-    .how-m-fill{ position:absolute; left:0; top:0; width:100%; height:0; border-radius:2px;
-      background:linear-gradient(180deg,var(--coral) 0%,var(--gold) 100%);
-      transition:height 1.1s cubic-bezier(.4,0,.2,1); }
-
-    .how-m-step{ position:relative; max-width:250px;
-      opacity:0; transform:translateY(16px); transition:opacity .6s, transform .6s; }
-    .how-m-step.in{ opacity:1; transform:none; }
+    /* Etat par defaut = frise COMPLETE et visible (amelioration progressive :
+       si le JS echoue, est absent, ou reduced-motion -> rail plein, etapes
+       visibles, puces allumees ; le contenu n'est JAMAIS masque). */
+    .how-m-fill{ position:absolute; left:0; top:0; width:100%; height:100%; border-radius:2px;
+      background:linear-gradient(180deg,var(--coral) 0%,var(--gold) 100%); }
+    .how-m-step{ position:relative; max-width:250px; }
     .how-m-step + .how-m-step{ margin-top:34px; }
+    .how-m-dot{ position:absolute; left:-34px; top:3px; width:14px; height:14px; border-radius:50%; }
+    .how-m-step[data-step="1"] .how-m-dot{ background:var(--coral); border:2px solid var(--coral); box-shadow:0 0 0 5px rgba(255,94,74,.16); }
+    .how-m-step[data-step="2"] .how-m-dot{ background:var(--gold); border:2px solid var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
+    .how-m-step[data-step="3"] .how-m-dot{ background:var(--deepForest); border:2px solid var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
 
-    .how-m-dot{ position:absolute; left:-34px; top:3px; width:14px; height:14px; border-radius:50%;
-      background:var(--cream); border:2px solid var(--border); transition:background .5s, border-color .5s, box-shadow .5s; }
-    .how-m-step[data-step="1"].in .how-m-dot{ background:var(--coral); border-color:var(--coral); box-shadow:0 0 0 5px rgba(255,94,74,.16); }
-    .how-m-step[data-step="2"].in .how-m-dot{ background:var(--gold); border-color:var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
-    .how-m-step[data-step="3"].in .how-m-dot{ background:var(--deepForest); border-color:var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
+    /* Le JS ajoute .anim seulement s'il peut piloter l'animation : on part
+       alors de l'etat "vide" et on revele au scroll (getBoundingClientRect,
+       independant du moteur -> fonctionne sur iOS Safari). */
+    .how-m.anim .how-m-fill{ height:0; transition:height 1.1s cubic-bezier(.4,0,.2,1); }
+    .how-m.anim .how-m-step{ opacity:0; transform:translateY(16px); transition:opacity .6s, transform .6s; }
+    .how-m.anim .how-m-step.in{ opacity:1; transform:none; }
+    .how-m.anim .how-m-dot{ background:var(--cream); border:2px solid var(--border); box-shadow:none; transition:background .5s, border-color .5s, box-shadow .5s; }
+    .how-m.anim .how-m-step[data-step="1"].in .how-m-dot{ background:var(--coral); border-color:var(--coral); box-shadow:0 0 0 5px rgba(255,94,74,.16); }
+    .how-m.anim .how-m-step[data-step="2"].in .how-m-dot{ background:var(--gold); border-color:var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
+    .how-m.anim .how-m-step[data-step="3"].in .how-m-dot{ background:var(--deepForest); border-color:var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
 
     .how-m-num{ display:block; font-family:var(--mono); font-size:10.5px; font-weight:700;
       letter-spacing:.14em; color:var(--coral700); margin-bottom:7px; }
@@ -980,11 +988,14 @@
     .how-m-x{ font-size:13.5px; line-height:1.62; color:#5a6b5d; margin:8px 0 0; max-width:250px; }
 
     /* --- Telephone narratif (blocs CSS) --- */
-    .how-m-preview{ margin-top:38px; display:flex; flex-direction:column; align-items:center; }
-    .how-m-device{ position:relative; width:186px; height:376px; background:var(--deepForest);
-      border-radius:32px; padding:9px; box-shadow:0 30px 60px -24px rgba(14,42,31,.5), 0 6px 16px -8px rgba(14,42,31,.3); }
-    .how-m-notch{ position:absolute; top:15px; left:50%; transform:translateX(-50%); width:56px; height:6px; border-radius:3px; background:rgba(255,255,255,.22); z-index:3; }
-    .how-m-screen{ position:absolute; inset:9px; border-radius:24px; background:#FFFDF9; padding:26px 16px 16px;
+    .how-m-preview{ margin-top:34px; display:flex; flex-direction:column; align-items:center; }
+    .how-m-device{ position:relative; width:184px; height:296px; background:var(--deepForest);
+      border-radius:30px; padding:8px; box-shadow:0 26px 52px -22px rgba(14,42,31,.5), 0 6px 16px -8px rgba(14,42,31,.3); }
+    .how-m-notch{ position:absolute; top:14px; left:50%; transform:translateX(-50%); width:52px; height:5px; border-radius:3px; background:rgba(255,255,255,.22); z-index:3; }
+    /* justify-content:center -> le contenu remplit l'ecran (fini le tiers
+       superieur + blanc en bas). */
+    .how-m-screen{ position:absolute; inset:8px; border-radius:23px; background:#FFFDF9; padding:22px 15px;
+      display:flex; flex-direction:column; justify-content:center;
       opacity:0; transform:scale(.97); transition:opacity .5s, transform .5s; overflow:hidden; }
     .how-m-screen.is-on{ opacity:1; transform:none; }
 
@@ -1010,16 +1021,94 @@
     .hs-row.ok .hs-av{ box-shadow:0 0 0 2px #fff, 0 0 0 4px rgba(31,157,87,.4); }
     .hs-tick{ color:var(--green); font-weight:700; font-size:15px; flex:0 0 auto; }
 
+    /* --- Micro-animations DANS l'ecran (rejouees a chaque activation) --- */
+    @keyframes hsUp{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:none;} }
+    @keyframes hsRight{ from{ opacity:0; transform:translateX(16px);} to{ opacity:1; transform:none;} }
+    @keyframes hsPop{ 0%{ opacity:0; transform:scale(.35);} 62%{ opacity:1; transform:scale(1.14);} 100%{ transform:scale(1);} }
+    @keyframes hsPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,94,74,0);} 50%{ box-shadow:0 0 0 6px rgba(255,94,74,.18);} }
+    /* Ecran 1 : les champs montent en cascade, le bouton pulse */
+    .how-m-screen.is-on[data-screen="1"] .hs-bar-t{ animation:hsUp .5s .04s both; }
+    .how-m-screen.is-on[data-screen="1"] .hs-field{ animation:hsUp .5s both; }
+    .how-m-screen.is-on[data-screen="1"] .hs-field:nth-of-type(1){ animation-delay:.12s; }
+    .how-m-screen.is-on[data-screen="1"] .hs-field:nth-of-type(2){ animation-delay:.2s; }
+    .how-m-screen.is-on[data-screen="1"] .hs-field:nth-of-type(3){ animation-delay:.28s; }
+    .how-m-screen.is-on[data-screen="1"] .hs-btn{ animation:hsUp .5s .38s both, hsPulse 1.6s 1s ease-in-out 2; }
+    /* Ecran 2 : les profils glissent depuis la droite, la "notification" pop */
+    .how-m-screen.is-on[data-screen="2"] .hs-bar-t{ animation:hsUp .5s .04s both; }
+    .how-m-screen.is-on[data-screen="2"] .hs-row{ animation:hsRight .5s both; }
+    .how-m-screen.is-on[data-screen="2"] .hs-row:nth-of-type(1){ animation-delay:.12s; }
+    .how-m-screen.is-on[data-screen="2"] .hs-row:nth-of-type(2){ animation-delay:.26s; }
+    .how-m-screen.is-on[data-screen="2"] .hs-row:nth-of-type(3){ animation-delay:.4s; }
+    .how-m-screen.is-on[data-screen="2"] .hs-badge{ animation:hsPop .45s .52s both; }
+    /* Ecran 3 : la coche apparait, les profils valides se cochent */
+    .how-m-screen.is-on[data-screen="3"] .hs-check{ animation:hsPop .55s .05s both; }
+    .how-m-screen.is-on[data-screen="3"] .hs-row{ animation:hsUp .5s both; }
+    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(1){ animation-delay:.22s; }
+    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(2){ animation-delay:.34s; }
+    .how-m-screen.is-on[data-screen="3"] .hs-tick{ animation:hsPop .45s both; }
+    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(1) .hs-tick{ animation-delay:.5s; }
+    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(2) .hs-tick{ animation-delay:.62s; }
+
     .how-m-cap{ margin-top:15px; font-family:var(--mono); font-size:11px; letter-spacing:.09em;
       text-transform:uppercase; color:var(--sage); }
   }
 
-  /* Accessibilite : sans animation, tout est visible d'emblee. */
+  /* Accessibilite : sans animation, tout est visible d'emblee (l'etat par
+     defaut est deja complet ; on neutralise aussi .anim par securite). */
   @media (max-width:900px) and (prefers-reduced-motion:reduce){
-    .how-m-step{ opacity:1 !important; transform:none !important; transition:none !important; }
-    .how-m-fill{ height:100% !important; transition:none !important; }
-    .how-m-dot{ transition:none !important; }
-    .how-m-screen{ transition:none !important; }
+    .how-m.anim .how-m-step{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .how-m.anim .how-m-fill{ height:100% !important; transition:none !important; }
+    .how-m.anim .how-m-dot{ transition:none !important; }
+    .how-m-screen, .how-m-screen *{ animation:none !important; transition:none !important; }
+  }
+  /* ============================================================
+     TYPOGRAPHIE MOBILE — recalibree (-15 a -20%) : la typo desktop etait
+     trop grande sur telephone (cause principale du "tout en longueur").
+     Tout sous @media (max-width:900px) ; desktop inchange.
+     ============================================================ */
+  @media (max-width:900px){
+    /* Hero */
+    #hero .copy h1{ font-size:37px !important; line-height:1.1 !important; }
+
+    /* Titres de section : ~26px (au lieu de ~32-40) */
+    .need h2, .sec-head h2, #about h2, #suivi .sv-copy h2, #equipe .eq-copy h2,
+    #cta .rp-copy h2, #faq .fq-head h2, .indep-intro h2, .scene .copy h2{
+      font-size:26px !important; line-height:1.14 !important; }
+
+    /* Titres d'etape / carte / question : ~18px (au lieu de 21-23) */
+    .how-m-t, .whyitem h4, #about .ab-pr h3, #faq .fq-q h3{
+      font-size:18px !important; line-height:1.2 !important; }
+
+    /* Corps de texte : 14px / 1.55 */
+    .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #suivi .sv-lead,
+    #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p, .whyitem p,
+    .how-m-x, #faq .fq-sub, #faq .fq-a p{
+      font-size:14px !important; line-height:1.55 !important; }
+
+    /* Le texte ne depasse jamais 280px de large */
+    .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #suivi .sv-lead,
+    #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p, .how-m-x{
+      max-width:280px !important; }
+    .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #about .ab-lead{
+      margin-left:auto !important; margin-right:auto !important; }
+
+    /* Divers */
+    .btn{ font-size:13.5px !important; padding:13px 22px !important; }
+    .need .pont{ font-size:17px !important; }
+    #about .ab-close{ font-size:18px !important; line-height:1.5 !important; }
+    .terrain .tr-line{ font-size:22px !important; }
+  }
+  /* ============================================================
+     RESPIRATION ENTRE SECTIONS (mobile) — les sections s'enchainaient
+     sans rupture. Filet fin sobre + alternance cream/blanc sur les
+     sections de texte (on garde le cream sous les sections a cartes/mock
+     pour ne pas perdre le contraste des blocs blancs). Desktop inchange.
+     ============================================================ */
+  @media (max-width:900px){
+    #besoin, .how-m, #secteurs, #why, #suivi, #equipe, #about, #faq, #cta,
+    #independants{ border-top:1px solid rgba(14,42,31,.07); }
+    /* alternance : sections de texte en blanc, le reste en cream */
+    #besoin, #about, #faq{ background:#FFFFFF !important; }
   }
 </style>
 </head>
@@ -5986,28 +6075,35 @@ async function mpSubmitLead(){
   var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   var active=0;
   function setActive(n){
-    if(n===active) return; active=n;
+    if(n<1 || n===active) return; active=n;
     if(fill) fill.style.height=(n/steps.length*100)+'%';
     screens.forEach(function(s){ s.classList.toggle('is-on', +s.getAttribute('data-screen')===n); });
     if(cap && CAPS[n]) cap.textContent=CAPS[n];
   }
-  if(reduce){
-    steps.forEach(function(s){ s.classList.add('in'); });
-    if(fill) fill.style.height='100%';
-    setActive(1);
-    return;
-  }
+  // reduced-motion : on laisse l'etat par defaut (frise complete visible),
+  // on s'assure juste que l'ecran 1 du telephone est affiche.
+  if(reduce){ setActive(1); return; }
+
+  // On "arme" l'animation : la frise part de l'etat vide, puis on revele
+  // au scroll. Pilote par getBoundingClientRect (et NON IntersectionObserver,
+  // dont les callbacks ne se declenchent pas de facon fiable sur iOS Safari
+  // avec un rootMargin negatif). Fonctionne donc a l'identique sur WebKit.
+  sec.classList.add('anim');
   setActive(1);
-  var io=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        e.target.classList.add('in');
-        var n=+e.target.getAttribute('data-step');
-        if(n>active) setActive(n);
-      }
-    });
-  },{ rootMargin:'0px 0px -42% 0px', threshold:0 });
-  steps.forEach(function(s){ io.observe(s); });
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh=window.innerHeight || document.documentElement.clientHeight;
+    var line=vh*0.80, reached=0;
+    for(var i=0;i<steps.length;i++){
+      if(steps[i].getBoundingClientRect().top < line){ steps[i].classList.add('in'); reached=i+1; }
+    }
+    if(reached>active) setActive(reached);
+  }
+  function onScroll(){ if(!ticking){ ticking=true; (window.requestAnimationFrame||function(f){setTimeout(f,16);})(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  update();
 })();
 </script>
 </body>
