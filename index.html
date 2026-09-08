@@ -959,7 +959,8 @@
        si le JS echoue, est absent, ou reduced-motion -> rail plein, etapes
        visibles, puces allumees ; le contenu n'est JAMAIS masque). */
     .how-m-fill{ position:absolute; left:0; top:0; width:100%; height:100%; border-radius:2px;
-      background:linear-gradient(180deg,var(--coral) 0%,var(--gold) 100%); }
+      background:linear-gradient(180deg,var(--coral) 0%,var(--gold) 100%);
+      transform-origin:top center; }
     .how-m-step{ position:relative; max-width:250px; }
     .how-m-step + .how-m-step{ margin-top:34px; }
     .how-m-dot{ position:absolute; left:-34px; top:3px; width:14px; height:14px; border-radius:50%; }
@@ -967,16 +968,26 @@
     .how-m-step[data-step="2"] .how-m-dot{ background:var(--gold); border:2px solid var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
     .how-m-step[data-step="3"] .how-m-dot{ background:var(--deepForest); border:2px solid var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
 
-    /* Le JS ajoute .anim seulement s'il peut piloter l'animation : on part
-       alors de l'etat "vide" et on revele au scroll (getBoundingClientRect,
-       independant du moteur -> fonctionne sur iOS Safari). */
-    .how-m.anim .how-m-fill{ height:0; transition:height 1.1s cubic-bezier(.4,0,.2,1); }
-    .how-m.anim .how-m-step{ opacity:0; transform:translateY(16px); transition:opacity .6s, transform .6s; }
-    .how-m.anim .how-m-step.in{ opacity:1; transform:none; }
+    /* ANIMATION — pilotage :
+       · Les ETAPES (texte) restent TOUJOURS visibles (aucune dependance JS :
+         pas de reveal-up qui les masquerait si l'observateur ne se declenche
+         pas sur l'appareil). C'est du contenu, pas de la decoration.
+       · Le RAIL + les puces + le telephone sont pilotes par un TIMER JS
+         (setInterval, cf. plus bas) : animation continue, independante du
+         scroll ET des observateurs -> elle se joue meme sur WebKit/iOS.
+       Le JS ajoute .anim seulement s'il pilote : on part alors du rail vide +
+       puces eteintes, puis on remplit au fil des ecrans du telephone. */
+    /* Remplissage anime via scaleY (transform-origin:top) plutot que height :
+       une hauteur en % ne se resout pas ici (le rail est en position:absolute
+       sans hauteur explicite), et le transform est fiable partout, iOS compris. */
+    .how-m.anim .how-m-fill{ transform:scaleY(0); transition:transform 1s cubic-bezier(.4,0,.2,1); }
     .how-m.anim .how-m-dot{ background:var(--cream); border:2px solid var(--border); box-shadow:none; transition:background .5s, border-color .5s, box-shadow .5s; }
-    .how-m.anim .how-m-step[data-step="1"].in .how-m-dot{ background:var(--coral); border-color:var(--coral); box-shadow:0 0 0 5px rgba(255,94,74,.16); }
-    .how-m.anim .how-m-step[data-step="2"].in .how-m-dot{ background:var(--gold); border-color:var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
-    .how-m.anim .how-m-step[data-step="3"].in .how-m-dot{ background:var(--deepForest); border-color:var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
+    .how-m.anim .how-m-step.reached[data-step="1"] .how-m-dot{ background:var(--coral); border-color:var(--coral); box-shadow:0 0 0 5px rgba(255,94,74,.16); }
+    .how-m.anim .how-m-step.reached[data-step="2"] .how-m-dot{ background:var(--gold); border-color:var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
+    .how-m.anim .how-m-step.reached[data-step="3"] .how-m-dot{ background:var(--deepForest); border-color:var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
+    /* la puce de l'etape active respire doucement */
+    .how-m.anim .how-m-step.act .how-m-dot{ animation:hmDotPulse 1.7s ease-in-out infinite; }
+    @keyframes hmDotPulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.16);} }
 
     .how-m-num{ display:block; font-family:var(--mono); font-size:10.5px; font-weight:700;
       letter-spacing:.14em; color:var(--coral700); margin-bottom:7px; }
@@ -992,72 +1003,103 @@
     .how-m-device{ position:relative; width:184px; height:296px; background:var(--deepForest);
       border-radius:30px; padding:8px; box-shadow:0 26px 52px -22px rgba(14,42,31,.5), 0 6px 16px -8px rgba(14,42,31,.3); }
     .how-m-notch{ position:absolute; top:14px; left:50%; transform:translateX(-50%); width:52px; height:5px; border-radius:3px; background:rgba(255,255,255,.22); z-index:3; }
-    /* justify-content:center -> le contenu remplit l'ecran (fini le tiers
-       superieur + blanc en bas). */
-    .how-m-screen{ position:absolute; inset:8px; border-radius:23px; background:#FFFDF9; padding:22px 15px;
-      display:flex; flex-direction:column; justify-content:center;
+    /* Ecran d'app credible (facon hero) : entete + contenu reel, aligne en haut. */
+    .how-m-screen{ position:absolute; inset:8px; border-radius:23px; background:#FFFDF9; padding:20px 14px 14px;
+      display:flex; flex-direction:column; justify-content:flex-start;
       opacity:0; transform:scale(.97); transition:opacity .5s, transform .5s; overflow:hidden; }
     .how-m-screen.is-on{ opacity:1; transform:none; }
 
-    .hs-bar-t{ display:block; width:58%; height:11px; border-radius:6px; background:#E5DDCC; margin-bottom:16px; }
-    .hs-field{ margin-bottom:12px; }
-    .hs-lbl{ display:block; width:38%; height:6px; border-radius:3px; background:#EBE4D6; margin-bottom:7px; }
-    .hs-inp{ display:block; height:13px; border-radius:6px; background:#F3EDE1; }
-    .hs-inp.short{ width:55%; }
-    .hs-btn{ margin-top:18px; background:var(--coral); color:#fff; font-family:var(--inter); font-weight:600;
-      font-size:12.5px; text-align:center; padding:10px; border-radius:999px; }
+    /* Barre systeme : heure + logo (comme un vrai ecran d'app) */
+    .hs-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; }
+    .hs-time{ font-family:var(--inter); font-weight:600; font-size:10px; color:var(--deepForest); }
+    .hs-brand{ font-family:var(--inter); font-weight:700; font-size:11px; letter-spacing:-.01em; color:var(--deepForest); }
+    .hs-brand b{ color:var(--coral); }
 
-    .hs-row{ display:flex; align-items:center; gap:9px; margin-bottom:13px; }
-    .hs-av{ width:30px; height:30px; border-radius:50%; flex:0 0 auto; background:linear-gradient(135deg,#FF8A6E,#C9462F); }
-    .hs-av.a2{ background:linear-gradient(135deg,#173d2b,#0E2A1F); }
+    /* Titre d'ecran */
+    .hs-h{ font-family:var(--serif); font-weight:500; font-size:15px; color:var(--deepForest);
+      margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+    .hs-count{ font-family:var(--inter); font-weight:700; font-size:9px; color:#fff; background:var(--coral);
+      border-radius:999px; min-width:16px; height:16px; padding:0 4px; display:inline-flex; align-items:center; justify-content:center; }
+
+    /* Ecran 1 : pills secteur + champs cle/valeur + bouton */
+    .hs-pills{ display:flex; gap:6px; margin-bottom:12px; }
+    .hs-pill{ font-family:var(--inter); font-weight:600; font-size:9px; padding:4px 9px; border-radius:999px; background:#F0EADD; color:#8a7f6b; }
+    .hs-pill.on{ background:var(--coral); color:#fff; }
+    .hs-kv{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:7px 0; border-bottom:1px solid #F1EBDE; }
+    .hs-kv span{ font-family:var(--inter); font-size:10px; color:#9a9384; flex:0 0 auto; }
+    .hs-kv b{ font-family:var(--inter); font-weight:600; font-size:10.5px; color:var(--deepForest); text-align:right; }
+    .hs-btn{ margin-top:auto; background:var(--coral); color:#fff; font-family:var(--inter); font-weight:600;
+      font-size:11px; text-align:center; padding:10px; border-radius:999px; }
+
+    /* Avatars a initiales (ecrans 2 et 3) */
+    .hs-av{ width:30px; height:30px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+      font-family:var(--inter); font-weight:700; font-size:10px; color:#fff; background:linear-gradient(135deg,#FF8A6E,#C9462F); }
+    .hs-av.a2{ background:linear-gradient(135deg,#2f6b47,#0E2A1F); }
     .hs-av.a3{ background:linear-gradient(135deg,#E6B43A,#B8860B); }
-    .hs-lines{ flex:1; min-width:0; }
-    .hs-lines span{ display:block; height:6px; border-radius:3px; background:#EFE8DB; }
-    .hs-lines span:first-child{ width:62%; margin-bottom:6px; background:#E3DBC9; }
-    .hs-badge{ width:18px; height:18px; border-radius:50%; background:#F7EFD4; flex:0 0 auto; }
-    .hs-check{ width:46px; height:46px; border-radius:50%; background:#E3F3E9; color:var(--green);
-      display:flex; align-items:center; justify-content:center; margin:2px auto 18px; }
-    .hs-check svg{ width:24px; height:24px; }
-    .hs-row.ok .hs-av{ box-shadow:0 0 0 2px #fff, 0 0 0 4px rgba(31,157,87,.4); }
-    .hs-tick{ color:var(--green); font-weight:700; font-size:15px; flex:0 0 auto; }
+
+    /* Ecran 2 : lignes profil (avatar + nom/role + note) */
+    .hs-prof{ display:flex; align-items:center; gap:9px; padding:8px 0; border-bottom:1px solid #F3EEE3; }
+    .hs-prof:last-child{ border-bottom:0; }
+    .hs-pi{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+    .hs-pi b{ font-family:var(--inter); font-weight:600; font-size:11px; color:var(--deepForest); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .hs-pi span{ font-family:var(--inter); font-size:9.5px; color:#9a9384; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .hs-star{ font-family:var(--inter); font-weight:600; font-size:9.5px; color:#B8860B; flex:0 0 auto; }
+
+    /* Ecran 3 : confirmation */
+    .hs-confwrap{ display:flex; flex-direction:column; align-items:center; margin:auto 0; width:100%; }
+    .hs-check{ width:44px; height:44px; border-radius:50%; background:#E3F3E9; color:var(--green);
+      display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
+    .hs-check svg{ width:23px; height:23px; }
+    .hs-ok-t{ font-family:var(--serif); font-weight:500; font-size:15px; color:var(--deepForest); margin-bottom:14px; }
+    .hs-conf{ display:flex; align-items:center; gap:8px; width:100%; padding:7px 0; border-bottom:1px solid #F3EEE3; }
+    .hs-conf:last-child{ border-bottom:0; }
+    .hs-ok{ font-family:var(--inter); font-weight:600; font-size:8px; color:var(--green); background:#E3F3E9;
+      padding:3px 6px; border-radius:999px; flex:0 0 auto; letter-spacing:.01em; }
 
     /* --- Micro-animations DANS l'ecran (rejouees a chaque activation) --- */
     @keyframes hsUp{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:none;} }
     @keyframes hsRight{ from{ opacity:0; transform:translateX(16px);} to{ opacity:1; transform:none;} }
     @keyframes hsPop{ 0%{ opacity:0; transform:scale(.35);} 62%{ opacity:1; transform:scale(1.14);} 100%{ transform:scale(1);} }
     @keyframes hsPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,94,74,0);} 50%{ box-shadow:0 0 0 6px rgba(255,94,74,.18);} }
-    /* Ecran 1 : les champs montent en cascade, le bouton pulse */
-    .how-m-screen.is-on[data-screen="1"] .hs-bar-t{ animation:hsUp .5s .04s both; }
-    .how-m-screen.is-on[data-screen="1"] .hs-field{ animation:hsUp .5s both; }
-    .how-m-screen.is-on[data-screen="1"] .hs-field:nth-of-type(1){ animation-delay:.12s; }
-    .how-m-screen.is-on[data-screen="1"] .hs-field:nth-of-type(2){ animation-delay:.2s; }
-    .how-m-screen.is-on[data-screen="1"] .hs-field:nth-of-type(3){ animation-delay:.28s; }
-    .how-m-screen.is-on[data-screen="1"] .hs-btn{ animation:hsUp .5s .38s both, hsPulse 1.6s 1s ease-in-out 2; }
-    /* Ecran 2 : les profils glissent depuis la droite, la "notification" pop */
-    .how-m-screen.is-on[data-screen="2"] .hs-bar-t{ animation:hsUp .5s .04s both; }
-    .how-m-screen.is-on[data-screen="2"] .hs-row{ animation:hsRight .5s both; }
-    .how-m-screen.is-on[data-screen="2"] .hs-row:nth-of-type(1){ animation-delay:.12s; }
-    .how-m-screen.is-on[data-screen="2"] .hs-row:nth-of-type(2){ animation-delay:.26s; }
-    .how-m-screen.is-on[data-screen="2"] .hs-row:nth-of-type(3){ animation-delay:.4s; }
-    .how-m-screen.is-on[data-screen="2"] .hs-badge{ animation:hsPop .45s .52s both; }
-    /* Ecran 3 : la coche apparait, les profils valides se cochent */
+    /* Ecran 1 : pills + champs montent en cascade, le bouton pulse */
+    .how-m-screen.is-on[data-screen="1"] .hs-pills{ animation:hsUp .5s .06s both; }
+    .how-m-screen.is-on[data-screen="1"] .hs-kv{ animation:hsUp .5s both; }
+    .how-m-screen.is-on[data-screen="1"] .hs-kv:nth-of-type(1){ animation-delay:.14s; }
+    .how-m-screen.is-on[data-screen="1"] .hs-kv:nth-of-type(2){ animation-delay:.22s; }
+    .how-m-screen.is-on[data-screen="1"] .hs-kv:nth-of-type(3){ animation-delay:.3s; }
+    .how-m-screen.is-on[data-screen="1"] .hs-btn{ animation:hsUp .5s .4s both, hsPulse 1.6s 1s ease-in-out 2; }
+    /* Ecran 2 : les profils glissent depuis la droite */
+    .how-m-screen.is-on[data-screen="2"] .hs-prof{ animation:hsRight .5s both; }
+    .how-m-screen.is-on[data-screen="2"] .hs-prof:nth-of-type(1){ animation-delay:.12s; }
+    .how-m-screen.is-on[data-screen="2"] .hs-prof:nth-of-type(2){ animation-delay:.26s; }
+    .how-m-screen.is-on[data-screen="2"] .hs-prof:nth-of-type(3){ animation-delay:.4s; }
+    /* Ecran 3 : la coche pop, le titre et les profils confirmes montent */
     .how-m-screen.is-on[data-screen="3"] .hs-check{ animation:hsPop .55s .05s both; }
-    .how-m-screen.is-on[data-screen="3"] .hs-row{ animation:hsUp .5s both; }
-    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(1){ animation-delay:.22s; }
-    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(2){ animation-delay:.34s; }
-    .how-m-screen.is-on[data-screen="3"] .hs-tick{ animation:hsPop .45s both; }
-    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(1) .hs-tick{ animation-delay:.5s; }
-    .how-m-screen.is-on[data-screen="3"] .hs-row:nth-of-type(2) .hs-tick{ animation-delay:.62s; }
+    .how-m-screen.is-on[data-screen="3"] .hs-ok-t{ animation:hsUp .5s .2s both; }
+    .how-m-screen.is-on[data-screen="3"] .hs-conf{ animation:hsUp .5s both; }
+    .how-m-screen.is-on[data-screen="3"] .hs-conf:nth-of-type(2){ animation-delay:.32s; }
+    .how-m-screen.is-on[data-screen="3"] .hs-conf:nth-of-type(3){ animation-delay:.44s; }
 
     .how-m-cap{ margin-top:15px; font-family:var(--mono); font-size:11px; letter-spacing:.09em;
       text-transform:uppercase; color:var(--sage); }
+
+    /* #6 — bloc contact en bas de "Comment ca marche" */
+    .how-m-contact{ margin-top:44px; padding-top:30px; border-top:1px solid rgba(14,42,31,.12);
+      display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .how-m-contact .eyebrow{ margin-bottom:16px; }
+    .hmc-items{ display:flex; flex-direction:column; gap:11px; width:100%; max-width:280px; }
+    .hmc-item{ display:inline-flex; align-items:center; justify-content:center; gap:9px;
+      font-family:var(--inter); font-weight:600; font-size:15px; color:var(--deepForest);
+      text-decoration:none; padding:13px 16px; border-radius:14px; background:#fff;
+      border:1px solid var(--border); box-shadow:0 6px 16px -12px rgba(14,42,31,.28); }
+    .hmc-item svg{ width:18px; height:18px; color:var(--coral); flex:0 0 auto; }
   }
 
   /* Accessibilite : sans animation, tout est visible d'emblee (l'etat par
      defaut est deja complet ; on neutralise aussi .anim par securite). */
   @media (max-width:900px) and (prefers-reduced-motion:reduce){
     .how-m.anim .how-m-step{ opacity:1 !important; transform:none !important; transition:none !important; }
-    .how-m.anim .how-m-fill{ height:100% !important; transition:none !important; }
+    .how-m.anim .how-m-fill{ transform:none !important; transition:none !important; }
     .how-m.anim .how-m-dot{ transition:none !important; }
     .how-m-screen, .how-m-screen *{ animation:none !important; transition:none !important; }
   }
@@ -1067,35 +1109,44 @@
      Tout sous @media (max-width:900px) ; desktop inchange.
      ============================================================ */
   @media (max-width:900px){
-    /* Hero */
-    #hero .copy h1{ font-size:37px !important; line-height:1.1 !important; }
+    /* Echelle typo mobile — 5 niveaux, appliquee partout :
+       N1 titre de section 25 · N2 titre de bloc/etape 18 · N3 corps 14/1.55
+       · N4 legende 12.5 · N5 micro-libelle 11 (mono .16em). Hero = display 34. */
 
-    /* Titres de section : ~26px (au lieu de ~32-40) */
+    /* Hero (display) + de l'air sous l'eyebrow (#4 : il collait au titre) */
+    #hero .copy h1{ font-size:34px !important; line-height:1.12 !important; }
+    #hero .copy .eyebrow{ margin-bottom:20px !important; }
+
+    /* N1 — titres de section : 25px */
     .need h2, .sec-head h2, #about h2, #suivi .sv-copy h2, #equipe .eq-copy h2,
     #cta .rp-copy h2, #faq .fq-head h2, .indep-intro h2, .scene .copy h2{
-      font-size:26px !important; line-height:1.14 !important; }
+      font-size:25px !important; line-height:1.15 !important; }
 
-    /* Titres d'etape / carte / question : ~18px (au lieu de 21-23) */
+    /* N2 — titres de bloc / etape / question : 18px */
     .how-m-t, .whyitem h4, #about .ab-pr h3, #faq .fq-q h3{
       font-size:18px !important; line-height:1.2 !important; }
 
-    /* Corps de texte : 14px / 1.55 */
+    /* N3 — corps de texte : 14px / 1.55, jamais > 280px */
     .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #suivi .sv-lead,
     #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p, .whyitem p,
-    .how-m-x, #faq .fq-sub, #faq .fq-a p{
+    .how-m-x, #faq .fq-sub, #faq .fq-a p, #about .ab-close{
       font-size:14px !important; line-height:1.55 !important; }
-
-    /* Le texte ne depasse jamais 280px de large */
     .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #suivi .sv-lead,
     #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p, .how-m-x{
       max-width:280px !important; }
     .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #about .ab-lead{
       margin-left:auto !important; margin-right:auto !important; }
 
+    /* N4 — legende (la legende telephone etait minuscule a 11px) */
+    .how-m-cap{ font-size:12.5px !important; letter-spacing:.08em !important; }
+
+    /* N5 — micro-libelles (eyebrow, numero d'etape) : 11px mono uniforme */
+    .eyebrow{ font-size:11px !important; letter-spacing:.16em !important; }
+    .how-m-num{ font-size:11px !important; }
+
     /* Divers */
     .btn{ font-size:13.5px !important; padding:13px 22px !important; }
-    .need .pont{ font-size:17px !important; }
-    #about .ab-close{ font-size:18px !important; line-height:1.5 !important; }
+    .need .pont{ font-size:16px !important; }
     .terrain .tr-line{ font-size:22px !important; }
   }
   /* ============================================================
@@ -1105,10 +1156,33 @@
      pour ne pas perdre le contraste des blocs blancs). Desktop inchange.
      ============================================================ */
   @media (max-width:900px){
-    #besoin, .how-m, #secteurs, #why, #suivi, #equipe, #about, #faq, #cta,
-    #independants{ border-top:1px solid rgba(14,42,31,.07); }
-    /* alternance : sections de texte en blanc, le reste en cream */
-    #besoin, #about, #faq{ background:#FFFFFF !important; }
+    /* Filet CLAIREMENT perceptible : hairline deepForest .18 + reflet blanc
+       juste en dessous -> effet grave, visible meme entre deux sections de
+       meme teinte (cream/cream ou blanc/blanc). */
+    #besoin, .how-m, #pour-independants, #secteurs, #why, #suivi, #equipe,
+    #about, #faq, #cta, #independants{
+      border-top:1px solid rgba(14,42,31,.18);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+    }
+    /* alternance cream/blanc plus marquee : sections de texte en blanc,
+       intercalees entre les sections cream/cartes -> rupture visible. */
+    #besoin, #pour-independants, #about, #faq{ background:#FFFFFF !important; }
+  }
+  /* ============================================================
+     #1 FICHE SECTEUR (.detail) — anti-clipping mobile.
+     Le libelle "MISSIONS COUVERTES" (chips, padding-left:0) demarrait
+     derriere le trait decoratif -> "ISSIONS COUVERTES". Meme remede que
+     #equipe : minmax(0,1fr) + min-width:0, et on donne a .detail-in une
+     marge gauche pour que TOUT le contenu degage le trait, lui-meme
+     rentre dans le cadre.
+     ============================================================ */
+  @media (max-width:900px){
+    #secteurs .detail-in{ grid-template-columns:minmax(0,1fr); min-width:0;
+      padding:24px 20px 24px 28px; }
+    #secteurs .detail-left{ padding-left:0; min-width:0; }
+    #secteurs .chips{ padding-left:0; min-width:0; }
+    #secteurs .detail-strip{ left:11px; top:22px; bottom:22px; }
+    #secteurs .detail .ctx{ max-width:none; }
   }
 </style>
 </head>
@@ -1138,6 +1212,7 @@
   <a class="mlink" href="#why">Pourquoi nous</a>
   <a class="mlink" href="#about">À propos</a>
   <a class="mlink" href="#faq">FAQ</a>
+  <a class="mlink" href="#contact">Contact</a>
   <div class="mbtns">
     <a class="btn btn-coral" href="https://business.mission-go.fr/signup">Inscrire mon entreprise</a>
     <a class="btn btn-ghost" href="https://business.mission-go.fr/login">Connexion entreprise</a>
@@ -1261,33 +1336,53 @@
     </div>
   </div>
 
-  <!-- Apercu telephone : 3 ecrans schematiques (blocs CSS, pas d'images) -->
+  <!-- Apercu app (blocs CSS, pas d'images) : ecrans credibles facon hero.
+       Auto-joue en boucle (JS timer) -> anime meme si le scroll-sync echoue. -->
   <div class="how-m-preview">
     <div class="how-m-device" aria-hidden="true">
       <span class="how-m-notch"></span>
 
+      <!-- 1. Publication de la mission -->
       <div class="how-m-screen is-on" data-screen="1">
-        <span class="hs-bar hs-bar-t"></span>
-        <div class="hs-field"><span class="hs-lbl"></span><span class="hs-inp"></span></div>
-        <div class="hs-field"><span class="hs-lbl"></span><span class="hs-inp"></span></div>
-        <div class="hs-field"><span class="hs-lbl"></span><span class="hs-inp short"></span></div>
-        <div class="hs-btn">Publier</div>
+        <div class="hs-top"><span class="hs-time">9:41</span><span class="hs-brand">Mission<b>Go</b></span></div>
+        <div class="hs-h">Nouvelle mission</div>
+        <div class="hs-pills"><span class="hs-pill on">Hôtellerie</span><span class="hs-pill">Retail</span></div>
+        <div class="hs-kv"><span>Quand</span><b>Ven. 14 juin · 18h</b></div>
+        <div class="hs-kv"><span>Profils</span><b>3 indépendants</b></div>
+        <div class="hs-kv"><span>Lieu</span><b>Paris 11e</b></div>
+        <div class="hs-btn">Publier la mission</div>
       </div>
 
+      <!-- 2. Profils recus -->
       <div class="how-m-screen" data-screen="2">
-        <span class="hs-bar hs-bar-t"></span>
-        <div class="hs-row"><span class="hs-av a1"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-badge"></span></div>
-        <div class="hs-row"><span class="hs-av a2"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-badge"></span></div>
-        <div class="hs-row"><span class="hs-av a3"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-badge"></span></div>
+        <div class="hs-top"><span class="hs-time">9:41</span><span class="hs-brand">Mission<b>Go</b></span></div>
+        <div class="hs-h">Profils reçus <span class="hs-count">3</span></div>
+        <div class="hs-prof"><span class="hs-av a1">LM</span><span class="hs-pi"><b>Léa M.</b><span>Barmaid · Mixologie</span></span><span class="hs-star">★ 4.9</span></div>
+        <div class="hs-prof"><span class="hs-av a2">KB</span><span class="hs-pi"><b>Karim B.</b><span>Serveur · Hôtellerie</span></span><span class="hs-star">★ 4.8</span></div>
+        <div class="hs-prof"><span class="hs-av a3">SL</span><span class="hs-pi"><b>Sofia L.</b><span>Hôtesse</span></span><span class="hs-star">★ 5.0</span></div>
       </div>
 
+      <!-- 3. Mission confirmee -->
       <div class="how-m-screen" data-screen="3">
-        <span class="hs-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        <div class="hs-row ok"><span class="hs-av a1"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-tick">✓</span></div>
-        <div class="hs-row ok"><span class="hs-av a2"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-tick">✓</span></div>
+        <div class="hs-top"><span class="hs-time">9:41</span><span class="hs-brand">Mission<b>Go</b></span></div>
+        <div class="hs-confwrap">
+          <span class="hs-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div class="hs-ok-t">Mission confirmée</div>
+          <div class="hs-conf"><span class="hs-av a1">LM</span><span class="hs-pi"><b>Léa M.</b><span>Barmaid</span></span><span class="hs-ok">Confirmé</span></div>
+          <div class="hs-conf"><span class="hs-av a2">KB</span><span class="hs-pi"><b>Karim B.</b><span>Serveur</span></span><span class="hs-ok">Confirmé</span></div>
+        </div>
       </div>
     </div>
     <p class="how-m-cap">Publication de la mission</p>
+  </div>
+
+  <!-- #6 : bloc contact en bas de "Comment ca marche" (mobile) -->
+  <div class="how-m-contact" id="contact">
+    <span class="eyebrow">Contact</span>
+    <div class="hmc-items">
+      <a class="hmc-item" href="tel:+33768691611"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z"/></svg>07 68 69 16 11</a>
+      <a class="hmc-item" href="mailto:contact@mission-go.fr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>contact@mission-go.fr</a>
+    </div>
   </div>
 </section>
 
@@ -6063,8 +6158,19 @@ async function mpSubmitLead(){
 })();
 </script>
 <script>
-/* "Comment ca marche" mobile : frise animee + telephone narratif.
-   Ne s'active que si la section mobile est rendue (donc <=900px). */
+/* "Comment ca marche" mobile : frise + apercu d'app.
+   -------------------------------------------------------------------------
+   DIAGNOSTIC (repris a zero) : les corrections precedentes pilotaient la
+   frise AU SCROLL (IntersectionObserver a rootMargin negatif, puis
+   getBoundingClientRect). Sur iOS Safari le rendu observe restait l'etat par
+   defaut (rail plein, puces allumees, rien qui bouge) -> symptome rapporte.
+   REMEDE : ne plus dependre du suivi de scroll. L'apercu telephone s'auto-joue
+   sur un TIMER (setInterval) -> animation continue, independante du moteur de
+   scroll, donc fiable sur WebKit/iOS. Les etapes, elles, apparaissent via
+   .reveal-up = l'observateur du site (seuil positif, SANS rootMargin negatif),
+   celui qui anime deja toutes les autres sections y compris sur iOS.
+   Le timer ne demarre qu'a l'entree en vue (observateur a seuil positif) avec
+   filets de securite (scroll / touch / delai). ------------------------------ */
 (function(){
   var sec=document.getElementById('how-m'); if(!sec) return;
   var steps=[].slice.call(sec.querySelectorAll('.how-m-step'));
@@ -6073,37 +6179,48 @@ async function mpSubmitLead(){
   var cap=sec.querySelector('.how-m-cap');
   var CAPS={1:'Publication de la mission',2:'Profils reçus',3:'Mission confirmée'};
   var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var active=0;
-  function setActive(n){
-    if(n<1 || n===active) return; active=n;
-    if(fill) fill.style.height=(n/steps.length*100)+'%';
+  var N=screens.length||3;
+
+  function paint(n){
+    // Remplissage du trait via scaleY (0..1) depuis le haut. Le transform est
+    // fiable (contrairement a une hauteur en % ignoree ici, le rail etant en
+    // position:absolute sans hauteur explicite).
+    if(fill) fill.style.transform='scaleY('+(n/N).toFixed(4)+')';
+    steps.forEach(function(s){
+      var d=+s.getAttribute('data-step');
+      s.classList.toggle('reached', d<=n);
+      s.classList.toggle('act', d===n);
+    });
     screens.forEach(function(s){ s.classList.toggle('is-on', +s.getAttribute('data-screen')===n); });
     if(cap && CAPS[n]) cap.textContent=CAPS[n];
   }
-  // reduced-motion : on laisse l'etat par defaut (frise complete visible),
-  // on s'assure juste que l'ecran 1 du telephone est affiche.
-  if(reduce){ setActive(1); return; }
 
-  // On "arme" l'animation : la frise part de l'etat vide, puis on revele
-  // au scroll. Pilote par getBoundingClientRect (et NON IntersectionObserver,
-  // dont les callbacks ne se declenchent pas de facon fiable sur iOS Safari
-  // avec un rootMargin negatif). Fonctionne donc a l'identique sur WebKit.
-  sec.classList.add('anim');
-  setActive(1);
-  var ticking=false;
-  function update(){
-    ticking=false;
-    var vh=window.innerHeight || document.documentElement.clientHeight;
-    var line=vh*0.80, reached=0;
-    for(var i=0;i<steps.length;i++){
-      if(steps[i].getBoundingClientRect().top < line){ steps[i].classList.add('in'); reached=i+1; }
-    }
-    if(reached>active) setActive(reached);
+  // reduced-motion : l'etat par defaut du HTML est deja l'etat statique complet
+  // (rail plein en CSS, puces allumees, etapes visibles, ecran 1 affiche). On
+  // NE touche a rien (surtout pas au trait : paint() le mettrait a scaleY(1/3)).
+  if(reduce){ return; }
+
+  var active=0, timer=null, started=false;
+  function tick(){ active=active%N+1; paint(active); }   // 1->2->3->1 en boucle
+  function start(){
+    if(started) return; started=true;
+    sec.classList.add('anim');   // arme : rail vide + puces eteintes
+    paint(0);
+    setTimeout(function(){ tick(); timer=setInterval(tick, 2600); }, 450);
   }
-  function onScroll(){ if(!ticking){ ticking=true; (window.requestAnimationFrame||function(f){setTimeout(f,16);})(update); } }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll);
-  update();
+
+  // Demarrage a l'entree en vue : observateur a seuil POSITIF (sans rootMargin
+  // negatif) = le motif qui se declenche reellement sur iOS.
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ start(); io.disconnect(); } });
+    }, {threshold:0.2});
+    io.observe(sec);
+  } else { start(); }
+  // Filets de securite si l'observateur ne rend pas la main.
+  window.addEventListener('scroll', start, {passive:true, once:true});
+  window.addEventListener('touchstart', start, {passive:true, once:true});
+  setTimeout(start, 2500);
 })();
 </script>
 </body>
