@@ -1084,8 +1084,13 @@
       text-transform:uppercase; color:var(--sage); }
 
     /* #6 — bloc contact en bas de "Comment ca marche" */
+    /* scroll-margin-top : #contact est un <div> (pas un <section>), donc la
+       regle section[id]{scroll-margin-top} ne l'atteignait pas -> l'ancre
+       tombait sous l'en-tete fixe (88px) et laissait voir la section suivante
+       (#pour-independants). On corrige ici pour que l'ancre atterrisse bien. */
     .how-m-contact{ margin-top:44px; padding-top:30px; border-top:1px solid rgba(14,42,31,.12);
-      display:flex; flex-direction:column; align-items:center; text-align:center; }
+      display:flex; flex-direction:column; align-items:center; text-align:center;
+      scroll-margin-top:96px; }
     .how-m-contact .eyebrow{ margin-bottom:16px; }
     .hmc-items{ display:flex; flex-direction:column; gap:11px; width:100%; max-width:280px; }
     .hmc-item{ display:inline-flex; align-items:center; justify-content:center; gap:9px;
@@ -1126,19 +1131,26 @@
     .how-m-t, .whyitem h4, #about .ab-pr h3, #faq .fq-q h3{
       font-size:18px !important; line-height:1.2 !important; }
 
-    /* N3 — corps de texte : 14px / 1.55, jamais > 280px */
-    .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #suivi .sv-lead,
-    #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p, .whyitem p,
-    .how-m-x, #faq .fq-sub, #faq .fq-a p, #about .ab-close{
-      font-size:14px !important; line-height:1.55 !important; }
+    /* N3 — corps de texte : 15,5px / 1.58 (agrandi depuis 14/1.55).
+       Concerne UNIQUEMENT le corps ; aucun titre n'est touche. Applique
+       partout : frise, cartes, FAQ, secteurs (dont la fiche), sections texte. */
+    .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, .indep-intro .ii-soon,
+    #suivi .sv-lead, #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p,
+    .whyitem p, .how-m-x, #faq .fq-sub, #faq .fq-a p, #about .ab-close,
+    #secteurs .detail .ctx{
+      font-size:15.5px !important; line-height:1.58 !important; }
     .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #suivi .sv-lead,
     #equipe .eq-lead, #cta .rp-lead, #about .ab-lead, #about .ab-pr p, .how-m-x{
       max-width:280px !important; }
     .scene .copy .lead, .sec-head .lead, .indep-intro .ii-lead, #about .ab-lead{
       margin-left:auto !important; margin-right:auto !important; }
 
-    /* N4 — legende (la legende telephone etait minuscule a 11px) */
-    .how-m-cap{ font-size:12.5px !important; letter-spacing:.08em !important; }
+    /* N4 — legendes & libelles secondaires : 13px (agrandi depuis 12,5).
+       NE concerne PAS les micro-libelles en majuscules (eyebrow/num a 11px). */
+    .how-m-cap{ font-size:13px !important; letter-spacing:.08em !important; }
+    #suivi .sv-url, #suivi .sv-rmeta, #suivi .sv-chip, #suivi .sv-dfoot,
+    #equipe .eq-url, #equipe .eq-rmeta, #equipe .eq-reinv, #equipe .eq-dfoot{
+      font-size:13px !important; }
 
     /* N5 — micro-libelles (eyebrow, numero d'etape) : 11px mono uniforme */
     .eyebrow{ font-size:11px !important; letter-spacing:.16em !important; }
@@ -1207,7 +1219,7 @@
 
 <!-- MENU MOBILE -->
 <div class="mobilemenu" id="mobilemenu">
-  <a class="mlink" href="#how">Comment ça marche</a>
+  <a class="mlink" href="#how-m">Comment ça marche</a>
   <a class="mlink" href="#secteurs">Secteurs</a>
   <a class="mlink" href="#why">Pourquoi nous</a>
   <a class="mlink" href="#about">À propos</a>
