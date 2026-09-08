@@ -934,6 +934,93 @@
     .phone-poster{ display:block; margin:0 auto 16px; height:38vh; width:auto; max-width:70%; }
     #independants .phone-poster{ height:34vh; margin-bottom:20px; }
   }
+  /* ============================================================
+     "COMMENT CA MARCHE" — MOBILE : frise verticale unique + telephone
+     narratif. Remplace les 3 scenes empilees (~3 ecrans) par une seule
+     frise (~1,3 ecran). Desktop STRICTEMENT inchange : .how-m est masquee
+     hors mobile et tout est sous @media (max-width:900px).
+     ============================================================ */
+  .how-m{ display:none; }
+
+  @media (max-width:900px){
+    /* on masque les 3 scenes desktop "how" (le 3D est deja off mobile) */
+    section[data-phone="how1"],
+    section[data-phone="how2"],
+    section[data-phone="how3"]{ display:none !important; }
+
+    .how-m{ display:block; background:var(--cream); padding:52px 7vw 46px; position:relative; z-index:10; }
+    .how-m-eyebrow{ display:inline-flex; margin-bottom:26px; }
+
+    /* --- Frise --- */
+    .how-m-frise{ position:relative; padding-left:34px; }
+    .how-m-rail{ position:absolute; left:6px; top:7px; bottom:9px; width:2px; }
+    .how-m-track{ position:absolute; inset:0; background:var(--border); border-radius:2px; }
+    .how-m-fill{ position:absolute; left:0; top:0; width:100%; height:0; border-radius:2px;
+      background:linear-gradient(180deg,var(--coral) 0%,var(--gold) 100%);
+      transition:height 1.1s cubic-bezier(.4,0,.2,1); }
+
+    .how-m-step{ position:relative; max-width:250px;
+      opacity:0; transform:translateY(16px); transition:opacity .6s, transform .6s; }
+    .how-m-step.in{ opacity:1; transform:none; }
+    .how-m-step + .how-m-step{ margin-top:34px; }
+
+    .how-m-dot{ position:absolute; left:-34px; top:3px; width:14px; height:14px; border-radius:50%;
+      background:var(--cream); border:2px solid var(--border); transition:background .5s, border-color .5s, box-shadow .5s; }
+    .how-m-step[data-step="1"].in .how-m-dot{ background:var(--coral); border-color:var(--coral); box-shadow:0 0 0 5px rgba(255,94,74,.16); }
+    .how-m-step[data-step="2"].in .how-m-dot{ background:var(--gold); border-color:var(--gold); box-shadow:0 0 0 5px rgba(212,175,55,.18); }
+    .how-m-step[data-step="3"].in .how-m-dot{ background:var(--deepForest); border-color:var(--deepForest); box-shadow:0 0 0 5px rgba(14,42,31,.15); }
+
+    .how-m-num{ display:block; font-family:var(--mono); font-size:10.5px; font-weight:700;
+      letter-spacing:.14em; color:var(--coral700); margin-bottom:7px; }
+    .how-m-step[data-step="2"] .how-m-num{ color:#8A6D12; }
+    .how-m-step[data-step="3"] .how-m-num{ color:var(--forest3); }
+    .how-m-t{ font-family:var(--serif); font-weight:500; font-size:21px; line-height:1.16;
+      letter-spacing:-.01em; color:var(--deepForest); margin:0; }
+    .how-m-t .gold-i{ color:var(--coral); font-style:italic; }
+    .how-m-x{ font-size:13.5px; line-height:1.62; color:#5a6b5d; margin:8px 0 0; max-width:250px; }
+
+    /* --- Telephone narratif (blocs CSS) --- */
+    .how-m-preview{ margin-top:38px; display:flex; flex-direction:column; align-items:center; }
+    .how-m-device{ position:relative; width:186px; height:376px; background:var(--deepForest);
+      border-radius:32px; padding:9px; box-shadow:0 30px 60px -24px rgba(14,42,31,.5), 0 6px 16px -8px rgba(14,42,31,.3); }
+    .how-m-notch{ position:absolute; top:15px; left:50%; transform:translateX(-50%); width:56px; height:6px; border-radius:3px; background:rgba(255,255,255,.22); z-index:3; }
+    .how-m-screen{ position:absolute; inset:9px; border-radius:24px; background:#FFFDF9; padding:26px 16px 16px;
+      opacity:0; transform:scale(.97); transition:opacity .5s, transform .5s; overflow:hidden; }
+    .how-m-screen.is-on{ opacity:1; transform:none; }
+
+    .hs-bar-t{ display:block; width:58%; height:11px; border-radius:6px; background:#E5DDCC; margin-bottom:16px; }
+    .hs-field{ margin-bottom:12px; }
+    .hs-lbl{ display:block; width:38%; height:6px; border-radius:3px; background:#EBE4D6; margin-bottom:7px; }
+    .hs-inp{ display:block; height:13px; border-radius:6px; background:#F3EDE1; }
+    .hs-inp.short{ width:55%; }
+    .hs-btn{ margin-top:18px; background:var(--coral); color:#fff; font-family:var(--inter); font-weight:600;
+      font-size:12.5px; text-align:center; padding:10px; border-radius:999px; }
+
+    .hs-row{ display:flex; align-items:center; gap:9px; margin-bottom:13px; }
+    .hs-av{ width:30px; height:30px; border-radius:50%; flex:0 0 auto; background:linear-gradient(135deg,#FF8A6E,#C9462F); }
+    .hs-av.a2{ background:linear-gradient(135deg,#173d2b,#0E2A1F); }
+    .hs-av.a3{ background:linear-gradient(135deg,#E6B43A,#B8860B); }
+    .hs-lines{ flex:1; min-width:0; }
+    .hs-lines span{ display:block; height:6px; border-radius:3px; background:#EFE8DB; }
+    .hs-lines span:first-child{ width:62%; margin-bottom:6px; background:#E3DBC9; }
+    .hs-badge{ width:18px; height:18px; border-radius:50%; background:#F7EFD4; flex:0 0 auto; }
+    .hs-check{ width:46px; height:46px; border-radius:50%; background:#E3F3E9; color:var(--green);
+      display:flex; align-items:center; justify-content:center; margin:2px auto 18px; }
+    .hs-check svg{ width:24px; height:24px; }
+    .hs-row.ok .hs-av{ box-shadow:0 0 0 2px #fff, 0 0 0 4px rgba(31,157,87,.4); }
+    .hs-tick{ color:var(--green); font-weight:700; font-size:15px; flex:0 0 auto; }
+
+    .how-m-cap{ margin-top:15px; font-family:var(--mono); font-size:11px; letter-spacing:.09em;
+      text-transform:uppercase; color:var(--sage); }
+  }
+
+  /* Accessibilite : sans animation, tout est visible d'emblee. */
+  @media (max-width:900px) and (prefers-reduced-motion:reduce){
+    .how-m-step{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .how-m-fill{ height:100% !important; transition:none !important; }
+    .how-m-dot{ transition:none !important; }
+    .how-m-screen{ transition:none !important; }
+  }
 </style>
 </head>
 <body>
@@ -1053,6 +1140,67 @@
   </div>
 </section>
 
+
+<!-- ===== MOBILE ONLY : frise verticale "Comment ca marche" =====
+     Sous 900px, remplace les 3 scenes .scene[data-phone=how*] (masquees
+     en CSS). Meme texte (les 3 leads verbatim). Desktop inchange. -->
+<section class="how-m" id="how-m" aria-label="Comment ça marche">
+  <span class="eyebrow how-m-eyebrow">Comment ça marche</span>
+
+  <div class="how-m-frise">
+    <span class="how-m-rail" aria-hidden="true"><span class="how-m-track"></span><span class="how-m-fill"></span></span>
+
+    <div class="how-m-step" data-step="1">
+      <span class="how-m-dot" aria-hidden="true"></span>
+      <span class="how-m-num">01</span>
+      <h3 class="how-m-t">Postez votre mission.</h3>
+      <p class="how-m-x">Secteur, date, nombre d'indépendants, lieu. En moins d'une minute, votre besoin est en ligne, validé par nos équipes.</p>
+    </div>
+
+    <div class="how-m-step" data-step="2">
+      <span class="how-m-dot" aria-hidden="true"></span>
+      <span class="how-m-num">02</span>
+      <h3 class="how-m-t">Recevez des profils <span class="gold-i">vérifiés.</span></h3>
+      <p class="how-m-x">Chaque indépendant est vérifié avant d'accéder à la plateforme. Expérience, spécialités, disponibilités : vous comparez en un coup d'œil.</p>
+    </div>
+
+    <div class="how-m-step" data-step="3">
+      <span class="how-m-dot" aria-hidden="true"></span>
+      <span class="how-m-num">03</span>
+      <h3 class="how-m-t">Vous choisissez. C'est staffé.</h3>
+      <p class="how-m-x">Parmi les indépendants qui ont postulé, vous retenez ceux qui vous conviennent. MissionGo peut vous en recommander, mais la décision reste la vôtre. L'indépendant est notifié, la mission est confirmée.</p>
+    </div>
+  </div>
+
+  <!-- Apercu telephone : 3 ecrans schematiques (blocs CSS, pas d'images) -->
+  <div class="how-m-preview">
+    <div class="how-m-device" aria-hidden="true">
+      <span class="how-m-notch"></span>
+
+      <div class="how-m-screen is-on" data-screen="1">
+        <span class="hs-bar hs-bar-t"></span>
+        <div class="hs-field"><span class="hs-lbl"></span><span class="hs-inp"></span></div>
+        <div class="hs-field"><span class="hs-lbl"></span><span class="hs-inp"></span></div>
+        <div class="hs-field"><span class="hs-lbl"></span><span class="hs-inp short"></span></div>
+        <div class="hs-btn">Publier</div>
+      </div>
+
+      <div class="how-m-screen" data-screen="2">
+        <span class="hs-bar hs-bar-t"></span>
+        <div class="hs-row"><span class="hs-av a1"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-badge"></span></div>
+        <div class="hs-row"><span class="hs-av a2"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-badge"></span></div>
+        <div class="hs-row"><span class="hs-av a3"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-badge"></span></div>
+      </div>
+
+      <div class="how-m-screen" data-screen="3">
+        <span class="hs-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <div class="hs-row ok"><span class="hs-av a1"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-tick">✓</span></div>
+        <div class="hs-row ok"><span class="hs-av a2"></span><span class="hs-lines"><span></span><span></span></span><span class="hs-tick">✓</span></div>
+      </div>
+    </div>
+    <p class="how-m-cap">Publication de la mission</p>
+  </div>
+</section>
 
 <!-- ===== ENTRÉE INDÉPENDANTS (juste après "Comment ça marche") ===== -->
 <section class="indep-intro" id="pour-independants">
@@ -5823,6 +5971,43 @@ async function mpSubmitLead(){
       floor.style.transform="translateX(calc(-50% + "+(cx*-7)+"px))";
       requestAnimationFrame(loop); })();
   }
+})();
+</script>
+<script>
+/* "Comment ca marche" mobile : frise animee + telephone narratif.
+   Ne s'active que si la section mobile est rendue (donc <=900px). */
+(function(){
+  var sec=document.getElementById('how-m'); if(!sec) return;
+  var steps=[].slice.call(sec.querySelectorAll('.how-m-step'));
+  var fill=sec.querySelector('.how-m-fill');
+  var screens=[].slice.call(sec.querySelectorAll('.how-m-screen'));
+  var cap=sec.querySelector('.how-m-cap');
+  var CAPS={1:'Publication de la mission',2:'Profils reçus',3:'Mission confirmée'};
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var active=0;
+  function setActive(n){
+    if(n===active) return; active=n;
+    if(fill) fill.style.height=(n/steps.length*100)+'%';
+    screens.forEach(function(s){ s.classList.toggle('is-on', +s.getAttribute('data-screen')===n); });
+    if(cap && CAPS[n]) cap.textContent=CAPS[n];
+  }
+  if(reduce){
+    steps.forEach(function(s){ s.classList.add('in'); });
+    if(fill) fill.style.height='100%';
+    setActive(1);
+    return;
+  }
+  setActive(1);
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        var n=+e.target.getAttribute('data-step');
+        if(n>active) setActive(n);
+      }
+    });
+  },{ rootMargin:'0px 0px -42% 0px', threshold:0 });
+  steps.forEach(function(s){ io.observe(s); });
 })();
 </script>
 </body>
