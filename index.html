@@ -6079,10 +6079,29 @@ const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)setAc
   function closeDetail(){ detail.classList.remove('open'); cards.forEach(c=>c.classList.remove('active')); current=null; }
   cards.forEach(card=>{ card.addEventListener('click',()=>{ const key=card.dataset.sector; if(current===key){closeDetail();}else{openDetail(key,card);} }); });
   document.getElementById('dClose').addEventListener('click',closeDetail);
-  document.getElementById('dCta').addEventListener('click',function(ev){ ev.preventDefault(); const t=document.getElementById('cta'); if(t) t.scrollIntoView({behavior:'smooth'}); });
+  /* dCta : l'ancre native href="#cta" suffit (html{scroll-behavior:smooth} +
+     #cta a scroll-margin-top:86px). On retire le scrollIntoView JS, redondant
+     et fragile, pour un comportement fiable et identique aux autres liens. */
 })();
 </script>
 <script>document.querySelectorAll("#faq .fq-q").forEach(function(q){q.addEventListener("click",function(){q.parentElement.classList.toggle("fq-open");});});</script>
+<script>
+/* Bouton "Comment ça marche" (hero + pied de page) : href="#how" vise les
+   scenes desktop, masquees (display:none) sur mobile -> l'ancre native ne
+   menait alors nulle part. Au clic on ajuste le href vers la cible VISIBLE
+   (#how-m sur mobile, #how sur desktop) PUIS on laisse l'ancre native faire
+   le defilement : fiable partout et respecte scroll-margin-top. Desktop
+   inchange (le href y reste #how). */
+(function(){
+  document.querySelectorAll('a[href="#how"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var how=document.getElementById('how'), howm=document.getElementById('how-m');
+      var mobileMode = how && getComputedStyle(how).display==='none' && howm && getComputedStyle(howm).display!=='none';
+      a.setAttribute('href', mobileMode ? '#how-m' : '#how');
+    });
+  });
+})();
+</script>
 <div class="mp-toast" id="mpToast"></div>
 <script>function mpToast(m){var t=document.getElementById('mpToast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(window._mpt);window._mpt=setTimeout(function(){t.classList.remove('show');},2600);}</script>
 <script>
