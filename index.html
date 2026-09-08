@@ -904,6 +904,36 @@
     #about .ab-close{ margin-top:40px; }
     #about .ab-mark{ margin-top:26px; }
   }
+  /* ============================================================
+     3D DESACTIVE SUR MOBILE (voir garde JS) — poster statique en repli.
+     On masque le canvas fixe, on retire la reserve verticale (~54vh) qui
+     lui etait dediee dans chaque scene, et on affiche hero-phone.webp
+     (~20 Ko, transparent, 2x) a la place du telephone WebGL.
+     Effet de bord voulu : les 3 etapes "Comment ca marche" (scenes .scene
+     bg-soft) n'ont plus la reserve telephone -> elles deviennent 3 blocs
+     compacts empiles (~1 ecran au lieu de ~3).
+     ============================================================ */
+  .phone-poster{ display:none; }
+  @media (max-width:980px){
+    #stage3d{ display:none !important; }
+
+    /* plus de reserve telephone : les scenes repartent d'un haut normal.
+       .scene est en display:flex -> en colonne pour empiler poster + texte
+       (sinon le poster devient un item cote-a-cote et le texte deborde). */
+    #hero{ padding-top:24px; }
+    .scene{ padding-top:40px; flex-direction:column; align-items:center; }
+    .scene .copy{ width:100%; }
+    .scene.bg-soft{ padding-top:30px; padding-bottom:30px; } /* les 3 etapes, resserrees */
+    .scene.bg-warm{ padding-top:40px; }
+    /* "Comment ca marche" : titres/leads d'etape resserres (taille only,
+       aucun texte modifie) pour saisir les 3 etapes quasi d'un coup. */
+    .scene.bg-soft .copy h2{ font-size:31px; line-height:1.08; }
+    .scene.bg-soft .copy .lead{ font-size:16px; line-height:1.5; margin:12px 0 0; }
+
+    /* poster : remplace le telephone 3D (hero + section app worker) */
+    .phone-poster{ display:block; margin:0 auto 16px; height:38vh; width:auto; max-width:70%; }
+    #independants .phone-poster{ height:34vh; margin-bottom:20px; }
+  }
 </style>
 </head>
 <body>
@@ -946,6 +976,7 @@
 
 <!-- ===== SECTIONS ===== -->
 <section class="scene bg-cream" id="hero" data-phone="hero">
+  <img class="phone-poster" src="hero-phone.webp" width="370" height="725" alt="Aperçu de l'application MissionGo" decoding="async" />
   <div class="pops" aria-hidden="true">
     <div class="pop" style="top:22%;left:46%;--d:.4s;--t:7s"><span class="badge coral">✓ Vérifié</span></div>
     <div class="pop" style="top:38%;left:40%;--d:.7s;--t:8.2s"><span class="badge cream">Hôtellerie</span></div>
@@ -1565,6 +1596,7 @@
 </section>
 
 <section class="scene bg-cream" id="independants" data-phone="independants">
+  <img class="phone-poster" src="hero-phone.webp" width="370" height="725" alt="Aperçu de l'application MissionGo" decoding="async" loading="lazy" />
   <div class="copy reveal-up">
     <span class="eyebrow">Vous êtes indépendant&nbsp;?</span>
     <h2>Trouvez vos missions,<br>en un swipe.</h2>
@@ -5431,7 +5463,11 @@ const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)setAc
 /* ============ Téléphone 3D ============ */
 (function(){
   const canvas=document.getElementById('c'), stage=document.getElementById('stage3d'), haloEl=document.getElementById('halo');
-  if(!window.THREE || !THREE.WebGLRenderer){ if(haloEl)haloEl.style.display='none'; return; }
+  // Mobile / connexions "data saver" : on NE charge PAS le WebGL ni le
+  // modele phone.glb (2,5 Mo). Un poster statique (hero-phone.webp, 20 Ko)
+  // sert de repli. Le 3D reste sur desktop (>980px), fluide.
+  var NO3D = window.matchMedia('(max-width:980px)').matches || !!(navigator.connection && navigator.connection.saveData);
+  if(!window.THREE || !THREE.WebGLRenderer || NO3D){ if(haloEl)haloEl.style.display='none'; if(stage)stage.style.display='none'; return; }
 
   const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
